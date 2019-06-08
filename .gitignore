@@ -1,0 +1,4 @@
+**/*.swp
+.env
+examples/data_out.csv
+**/__pycache__
