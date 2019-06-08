@@ -4,7 +4,7 @@ import abc
 import collections
 
 
-class Pipeline(object):
+class SimplePipeline(object):
     def __init__(self, stages):
         if not isinstance(stages, collections.Iterable):
             stages = [stages]

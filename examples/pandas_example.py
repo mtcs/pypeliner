@@ -37,7 +37,12 @@ def main():
     output_stage = OutputCSV('examples/data_out.csv')
 
     # Build pipeline
-    pipeline = ppl.Pipeline([load_stage, print_data, average_stage, print_data, output_stage])
+    stages = [load_stage,
+              print_data,
+              average_stage,
+              print_data,
+              output_stage]
+    pipeline = ppl.SimplePipeline(stages)
 
     # Run Pipeline
     pipeline.run('examples/data.csv')
