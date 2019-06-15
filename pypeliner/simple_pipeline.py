@@ -37,7 +37,7 @@ def _solve_stage_list(input_data, stages):
 
 
 class SimplePipeline(object):
-    """
+    """ A SimplePipeline is a syncronous serial pipeline. Every stage is executed exclusivelly until it outputs data or returns completely.
     """
     def __init__(self, stages):
         """
@@ -48,8 +48,7 @@ class SimplePipeline(object):
 
         # Check if stages inherit from allowed abstract classes
         for stage in stages:
-            assert issubclass(stage.__class__, Transformation) or \
-                issubclass(stage.__class__, Persistence) or \
+            assert issubclass(stage.__class__, Stage) or \
                 isinstance(stage, list)
 
         self.stages = stages
@@ -65,12 +64,16 @@ class SimplePipeline(object):
 
 
 class Stage(object):
+    """ A Stage is a basic component of a pipeline. When execute by the pipeline, it can either
+    transform or persist data.
+    """
     def _run(self):
         _LOG.info(f'Runnung {self.__class__.__name__}')
 
 
 class Transformation(Stage):
-    """
+    """ A Transcformation class is a Stage class that transforms data in a n > n cardinality. It
+    has a tranform function which receives data and outputs data.
     """
     def __init__(self):
         """
@@ -86,7 +89,7 @@ class Transformation(Stage):
 
     @abc.abstractmethod
     def transform(self, input_data):
-        """
+        """ A tranformation function that receives data and outputs data
         :input_data: input data to be transformed
         :returns :
         """
@@ -94,7 +97,9 @@ class Transformation(Stage):
 
 
 class Persistence(Stage):
-    """
+    """ A Persistence class is a Stage class that persists data in a n > None cardinality. It
+    has a persist function which receives data and usually outputs somthing else, like a file or
+    console output.
     """
     def __init__(self):
         """
