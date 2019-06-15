@@ -6,7 +6,7 @@ import logging
 
 import pandas as pd
 
-import pypeliner as ppl
+import pypeliner.simple_pipeline as ppl
 
 
 class LoadData(ppl.Transformation):
