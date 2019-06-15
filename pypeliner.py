@@ -1,7 +1,35 @@
-#!
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import abc
 import collections
+import logging
+
+_LOG = logging.getLogger(__name__)
+
+
+# Recursive stage list solver
+def _solve_stage_list(input_data, stages):
+    for stage in stages:
+        if isinstance(stage, list):
+            # Recursivelly call list of stages
+            _LOG.debug(f'Junction found with {len(stage)} subpipelines')
+            out_data = list(range(len(stage)))
+            for i, substagelist in enumerate(stage):
+                assert isinstance(substagelist, list)
+                out_data[i] = _solve_stage_list(input_data, substagelist)
+
+            input_data = out_data
+
+        elif issubclass(stage.__class__, Persistence):
+            # Persist Persistance stages
+            stage.persist(input_data)
+
+        else:
+            # Transform Transformation stages
+            input_data = stage.transform(input_data)
+
+    return input_data
 
 
 class SimplePipeline(object):
@@ -12,24 +40,15 @@ class SimplePipeline(object):
         # Check if stages inherit from allowed abstract classes
         for stage in stages:
             assert issubclass(stage.__class__, Transformation) or \
-                issubclass(stage.__class__, Persistence)
+                issubclass(stage.__class__, Persistence) or \
+                isinstance(stage, list)
 
         self.stages = stages
 
     def run(self, input_data):
-        last_stage_was_persistence = False
-        for stage in self.stages:
-            if issubclass(stage.__class__, Persistence):
-                last_stage_was_persistence = True
-                stage.persist(input_data)
-            else:
-                last_stage_was_persistence = False
-                input_data = stage.transform(input_data)
+        _solve_stage_list(input_data, self.stages)
 
-        if last_stage_was_persistence:
-            return None
-        else:
-            return input_data
+        return input_data
 
 
 class Transformation(object):
