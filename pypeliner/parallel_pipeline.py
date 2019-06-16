@@ -94,7 +94,7 @@ class ParallelPipeline(object):
 
     processes = []
 
-    def __init__(self, stages, partition_size=1000):
+    def __init__(self, stages, partition_size=None):
         self.partition_size = partition_size
         if not isinstance(stages, collections.Iterable):
             stages = [stages]
@@ -110,6 +110,9 @@ class ParallelPipeline(object):
 
         # TODO Solve queue concurrent get
         for stage in self.stages:
+            if self.partition_size and isinstance(stage, Stage):
+                stage.partition_size = self.partition_size
+
             if issubclass(stage.__class__, Transformation):
                 # Transformation: input and output
                 output_stream = mp.Queue(maxsize=MAX_QUEUE_SIZE)
@@ -166,7 +169,7 @@ class ParallelPipeline(object):
 
 
 class Stage(object):
-    partition_size = 1000
+    partition_size = None
 
 
 class DataCreator(Stage):

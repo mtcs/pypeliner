@@ -16,17 +16,16 @@ class ReadCSV(ppl.DataCreator):
     def __init__(self, file_path):
         self.file_path = file_path
         self.file = open(file_path, 'r')
-        self.line_count = 0
+        self.df_iterator = pd.read_csv(self.file_path, chunksize=3)
 
     def create(self, _):
-        df = pd.read_csv(
-            self.file_path, nrows=self.partition_size, skiprows=self.line_count)
-        self.line_count += len(df)
-
-        if df.empty:
+        #print(type(self.df_iterator))
+        try:
+            df = self.df_iterator.get_chunk(size=self.partition_size)
+        except StopIteration:
             return None
-        else:
-            return df
+
+        return df
 
 
 class CalculateColumn(ppl.Transformation):
@@ -59,7 +58,7 @@ def main():
         PrintData('Parcial Output'),
     ]
 
-    pipeline = ppl.ParallelPipeline(stages, partition_size=2)
+    pipeline = ppl.ParallelPipeline(stages, partition_size=3)
 
     pipeline.run()
 
