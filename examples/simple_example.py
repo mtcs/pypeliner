@@ -1,4 +1,4 @@
-import pypeline_workflow.simple_pipeline as ppl
+import pypeliner_workflow.simple_pipeline as ppl
 
 
 class SayFirst(ppl.Transformation):
