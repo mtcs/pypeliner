@@ -35,7 +35,7 @@ mypipeline.run(['hello', 'world'])
 You can run more complex pipelines with stages with alternate routes.
 
 ```
-mypipeline = ppl.SimplePipeline([
+mypipeline = ppl.ParallelPipeline([
     FirstStage(),
     SecondStage(some argument),
     [
@@ -51,5 +51,5 @@ mypipeline = ppl.SimplePipeline([
 Stages in a parallel pipeline run in a separate process. They input and output data to multipreocessing queues. Also, they read data in batches in order to fill the pipeline.
 
 ## Other examples
-* (https://github.com/mtcs/pypeliner/blob/master/examples/pandas_example.py)[pandas_example.py]
-* (https://github.com/mtcs/pypeliner/blob/master/examples/parallel_pandas_example.py)[parallel_pandas_example.py]
+* https://github.com/mtcs/pypeliner/blob/master/examples/pandas_example.py
+* https://github.com/mtcs/pypeliner/blob/master/examples/parallel_pandas_example.py
