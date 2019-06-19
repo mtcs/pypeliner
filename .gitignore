@@ -2,3 +2,5 @@
 .env
 examples/data_out.csv
 **/__pycache__
+*.egg-info*
+dist*

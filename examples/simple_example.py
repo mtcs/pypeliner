@@ -1,13 +1,3 @@
-# Pypeliner
-Organize your data workflow
-
-Pypeliner is a simple framework to help organize data pypeline workflows. It makes easy to create, manage and visualize what is going on in a data engineering and data science application.
-
-It can be used with major data science tools, like Pandas and PySpark.
-
-## Simple example
-
-```
 import pypeline_workflow.simple_pipeline as ppl
 
 
@@ -28,6 +18,3 @@ mypipeline = ppl.SimplePipeline([
 ])
 
 mypipeline.run(['hello', 'world'])
-```
-```
-
