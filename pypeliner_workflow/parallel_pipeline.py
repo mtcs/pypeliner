@@ -4,12 +4,18 @@ import logging
 import multiprocessing as mp
 import time
 
-_LOG = logging.getLogger(__name__)
+import base_pipeline
+from base_pipeline import BasePipeline, BaseStage
+
 
 WAIT_TIME = 0.1
 MAX_QUEUE_SIZE = 2
 
 LOG = logging.getLogger(__name__)
+
+
+def enable_dashboard():
+    base_pipeline.enable_pipeline()
 
 
 def control_queue_size(queue):
@@ -87,7 +93,7 @@ def wide_input_handler_process(stage, stage_func, input_stream, output_stream):
     LOG.warning(f'Exiting {stage.__class__.__name__} process')
 
 
-class ParallelPipeline(object):
+class ParallelPipeline(BasePipeline):
     """ A out of core parallel pipeline class. It reads data in lbocks and lauches a process to
     execute each stage.
     """
@@ -95,6 +101,7 @@ class ParallelPipeline(object):
     processes = []
 
     def __init__(self, stages, partition_size=None):
+        super().__init__()
         self.partition_size = partition_size
         if not isinstance(stages, collections.Iterable):
             stages = [stages]
@@ -168,7 +175,7 @@ class ParallelPipeline(object):
             process.join()
 
 
-class Stage(object):
+class Stage(BaseStage):
     partition_size = None
 
 

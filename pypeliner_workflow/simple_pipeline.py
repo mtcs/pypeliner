@@ -5,7 +5,14 @@ import abc
 import collections
 import logging
 
+import pypeliner_workflow.base_pipeline as base_pipeline 
+from .base_pipeline import BasePipeline, BaseStage
+
 _LOG = logging.getLogger(__name__)
+
+
+def enable_dashboard():
+    base_pipeline.enable_dashboard()
 
 
 # Recursive stage list solver
@@ -36,13 +43,14 @@ def _solve_stage_list(input_data, stages):
     return input_data
 
 
-class SimplePipeline(object):
+class SimplePipeline(BasePipeline):
     """ A SimplePipeline is a syncronous serial pipeline. Every stage is executed exclusivelly until it outputs data or returns completely.
     """
     def __init__(self, stages):
         """
         :stages: a list of stages objects or subpipelines decribing the pipeline
         """
+        super().__init__()
         if not isinstance(stages, collections.Iterable):
             stages = [stages]
 
@@ -63,7 +71,7 @@ class SimplePipeline(object):
         return input_data
 
 
-class Stage(object):
+class Stage(BaseStage):
     """ A Stage is a basic component of a pipeline. When execute by the pipeline, it can either
     transform or persist data.
     """
@@ -75,11 +83,6 @@ class Transformation(Stage):
     """ A Transcformation class is a Stage class that transforms data in a n > n cardinality. It
     has a tranform function which receives data and outputs data.
     """
-    def __init__(self):
-        """
-        """
-        pass
-
     def _transform(self, input_data):
         """
         :input_data: input data to be transformed
@@ -101,11 +104,6 @@ class Persistence(Stage):
     has a persist function which receives data and usually outputs somthing else, like a file or
     console output.
     """
-    def __init__(self):
-        """
-        """
-        pass
-
     def _persist(self, input_data):
         """
         :input_data: input data to be persisted
