@@ -48,7 +48,7 @@ mypipeline = ppl.SimplePipeline([
 
 ## Parallel Pipelines
 
-Stages in a parallel pipeline run in a separate process. They input and output data to multipreocessing queues. Also, they read data in batches in order to fill the pipeline.
+Stages in a parallel pipeline run in a separate process. They input and output data to multipreocessing queues in blocks. Also, they read data in batches in order to fill the pipeline.
 
 ## Other examples
 * (https://github.com/mtcs/pypeliner/blob/master/examples/pandas_example.py)[pandas_example.py]
